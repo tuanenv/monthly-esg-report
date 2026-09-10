@@ -1,0 +1,18 @@
+{
+  "name": "monthly-esg-report",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monthly ESG Intelligence HTML report renderer",
+  "scripts": {
+    "render": "node scripts/render-report.js",
+    "render:png": "node scripts/render-report.js png",
+    "render:pdf": "node scripts/render-report.js pdf",
+    "render:all": "node scripts/render-report.js all"
+  },
+  "dependencies": {
+    "playwright": "^1.55.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
