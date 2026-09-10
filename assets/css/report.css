@@ -81,28 +81,39 @@ body {
 
 .hero {
   position: relative;
-  min-height: 190px;
+  min-height: 220px;
   padding: 32px 42px;
   overflow: hidden;
   color: #ffffff;
   border-radius: 24px;
-  background:
-    linear-gradient(
-      115deg,
-      var(--primary-dark),
-      var(--primary) 62%,
-      #54b98f
-    );
-}
 
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(3, 55, 47, 0.96) 0%,
+      rgba(4, 76, 63, 0.90) 32%,
+      rgba(6, 89, 71, 0.58) 60%,
+      rgba(6, 89, 71, 0.12) 100%
+    ),
+    url("../images/header-bg.png");
+
+  background-size: cover;
+  background-position: 65% center;
+  background-repeat: no-repeat;
+}
+.hero > * {
+  position: relative;
+  z-index: 2;
+}
 .hero::after {
   position: absolute;
   top: -170px;
   right: -80px;
+  z-index: 1;
   width: 380px;
   height: 380px;
   content: "";
-  border: 54px solid rgba(255, 255, 255, 0.08);
+  border: 54px solid rgba(255, 255, 255, 0.04);
   border-radius: 50%;
 }
 
