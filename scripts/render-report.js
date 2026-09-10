@@ -292,7 +292,7 @@ async function main() {
         width: 1500,
         height: 2100
       },
-      deviceScaleFactor: 2,
+      deviceScaleFactor: 1,
       locale: "th-TH",
       colorScheme: "light"
     });
