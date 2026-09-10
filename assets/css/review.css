@@ -1,0 +1,300 @@
+/* =========================================================
+   Analyst Review Page
+   ใช้ร่วมกับ report.css (ฟอนต์ + สี + card styles)
+   ========================================================= */
+
+:root {
+  --review-topbar-height: 64px;
+  --review-panel-gap: 16px;
+  --review-border: #d8e5e0;
+  --review-bg: #eef3f1;
+  --status-draft-bg: #fef3c7;
+  --status-draft-text: #92400e;
+  --status-approved-bg: #d1fae5;
+  --status-approved-text: #065f46;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: var(--review-bg);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Top bar */
+
+.review-topbar {
+  display: flex;
+  align-items: center;
+  flex: 0 0 var(--review-topbar-height);
+  gap: 20px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--review-border);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(18, 49, 45, 0.06);
+}
+
+.review-topbar-title {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.review-topbar-title strong {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.review-topbar-title span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.review-status {
+  margin-left: 8px;
+}
+
+.status-pill {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.status-draft {
+  color: var(--status-draft-text);
+  background: var(--status-draft-bg);
+}
+
+.status-approved {
+  color: var(--status-approved-text);
+  background: var(--status-approved-bg);
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Buttons */
+
+.btn {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 10px;
+  font-family: "PTT 45 Pride", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.05s ease, opacity 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  color: #ffffff;
+  background: var(--primary);
+}
+
+.btn-primary:hover {
+  opacity: 0.92;
+}
+
+.btn-secondary {
+  color: var(--ink);
+  background: #eef4f2;
+  border: 1px solid var(--review-border);
+}
+
+.btn-secondary:hover {
+  background: #e3ece9;
+}
+
+.btn-danger {
+  color: #ffffff;
+  background: #b3452f;
+}
+
+.btn-small {
+  padding: 6px 11px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+/* Layout: two columns */
+
+.review-layout {
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: var(--review-panel-gap);
+  padding: var(--review-panel-gap);
+}
+
+/* Left: form panel */
+
+.review-form-panel {
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid var(--review-border);
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.form-loading {
+  padding: 40px 10px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 15px;
+}
+
+.review-form label {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.review-form input[type="text"],
+.review-form input[type="number"],
+.review-form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px 11px;
+  color: var(--ink);
+  font-family: "PTT 45 Pride", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid var(--review-border);
+  border-radius: 9px;
+  background: #fbfdfc;
+}
+
+.review-form textarea {
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.review-form input:focus,
+.review-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(8, 118, 94, 0.12);
+}
+
+.form-section {
+  margin: 0 0 22px;
+  padding: 0 0 18px;
+  border: none;
+  border-bottom: 1px solid var(--review-border);
+}
+
+.form-section:last-child {
+  border-bottom: none;
+}
+
+.form-section legend {
+  margin-bottom: 12px;
+  padding: 0;
+  color: var(--primary-dark);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+/* News item editor cards */
+
+.news-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.news-item-editor {
+  padding: 14px;
+  border: 1px solid var(--review-border);
+  border-left: 5px solid var(--primary);
+  border-radius: 10px;
+  background: #f8fbfa;
+}
+
+.news-item-editor[data-signpost="SP1"] {
+  border-left-color: var(--sp1);
+}
+
+.news-item-editor[data-signpost="SP2"] {
+  border-left-color: var(--sp2);
+}
+
+.news-item-editor[data-signpost="SP3"] {
+  border-left-color: var(--sp3);
+}
+
+.news-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.news-item-badge {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  place-items: center;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.news-item-head strong {
+  font-size: 14px;
+}
+
+.news-item-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.news-item-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.news-item-editor select {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 10px;
+  color: var(--ink);
+  font-family: "PTT 45 Pride", sans-serif;
+  font-size: 14px;
+  border: 1px solid var(--review-border);
+  border
