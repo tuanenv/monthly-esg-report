@@ -300,3 +300,13 @@ async function loadReport() {
 }
 
 document.addEventListener("DOMContentLoaded", loadReport);
+
+
+/**
+ * เปิดฟังก์ชันบางส่วนให้หน้าอื่น (เช่น review.html) เรียกใช้ได้
+ * ไม่กระทบการทำงานของ index.html
+ */
+window.ReportRenderer = {
+  renderReport,
+  escapeHtml
+};
