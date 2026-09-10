@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Analyst review page for Monthly ESG Intelligence report"
+  >
+
+  <title>Review: Monthly ESG Intelligence</title>
+
+  ./assets/fonts/ptt45pride-regular.woff2
+
+  ./assets/fonts/ptt45pride-bold.woff2
+
+  ./assets/css/report.css
+
+  ./assets/css/review.css
+</head>
+
+<body data-render-status="loading">
+  <header class="review-topbar">
+    <div class="review-topbar-title">
+      <strong>Analyst Review</strong>
+      <span>Monthly ESG Intelligence Report</span>
+    </div>
+
+    <div class="review-status">
+      <span
+        id="review-status-pill"
+        class="status-pill status-draft"
+      >
+        DRAFT
+      </span>
+    </div>
+
+    <div class="review-actions">
+      <button
+        id="btn-reload-draft"
+        type="button"
+        class="btn btn-secondary"
+      >
+        โหลด Draft ใหม่
+      </button>
+
+      <button
+        id="btn-refresh-preview"
+        type="button"
+        class="btn btn-secondary"
+      >
+        อัปเดต Preview
+      </button>
+
+      <button
+        id="btn-download-approved"
+        type="button"
+        class="btn btn-primary"
+      >
+        ดาวน์โหลด Approved JSON
+      </button>
+    </div>
+  </header>
+
+  <main class="review-layout">
+    <section
+      class="review-form-panel"
+      aria-label="แบบฟอร์มแก้ไขข้อมูลรายงาน"
+    >
+      <div class="form-loading" id="form-loading">
+        กำลังโหลดข้อมูล Draft...
+      </div>
+
+      <form id="review-form" class="review-form hidden">
+        <fieldset class="form-section">
+          <legend>ข้อมูลรายงาน</legend>
+
+          <label>
+            เดือนของรายงาน
+            <input
+              type="text"
+              name="reportMonth"
+              placeholder="เช่น August 2026"
+            >
+          </label>
+
+          <label>
+            คำโปรย (Subtitle)
+            <input
+              type="text"
+              name="subtitle"
+            >
+          </label>
+
+          <label>
+            บทสรุปข่าวสำคัญประจำเดือน
+            <textarea
+              name="executiveSummary"
+              rows="4"
+            ></textarea>
+          </label>
+
+          <div class="form-grid-3">
+            <label>
+              จำนวนข่าวสำคัญ
+              <input
+                type="number"
+                name="statKeyStories"
+                min="0"
+              >
+            </label>
+
+            <label>
+              จำนวน Signpost
+              <input
+                type="number"
+                name="statSignposts"
+                min="0"
+              >
+            </label>
+
+            <label>
+              ข่าวที่พิจารณาทั้งหมด
+              <input
+                type="number"
+                name="statSignalsReviewed"
+                min="0"
+              >
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend>ข่าวสำคัญ 6 เรื่อง</legend>
+
+          <div
+            id="news-items-container"
+            class="news-items-container"
+          ></div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend>ประเด็นที่ควรจับตา</legend>
+
+          <div
+            id="watchlist-items-container"
+            class="watchlist-items-container"
+          ></div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend>ข้อมูลการตรวจสอบ (Approval)</legend>
+
+          <label>
+            ผู้ตรวจสอบ
+            <input
+              type="text"
+              name="reviewedBy"
+              placeholder="ชื่อ Analyst"
+            >
+          </label>
+
+          <label>
+            ความเห็นประกอบการอนุมัติ
+            <textarea
+              name="approvalComment"
+              rows="2"
+              placeholder="เช่น ตรวจสอบความถูกต้องของตัวเลขและชื่อกฎหมายแล้ว"
+            ></textarea>
+          </label>
+        </fieldset>
+      </form>
+    </section>
+
+    <section
+      class="review-preview-panel"
+      aria-label="ตัวอย่างรายงานก่อนอนุมัติ"
+    >
+      <div class="preview-toolbar">
+        Preview
+      </div>
+
+      <div class="preview-scroll">
+        <main
+          id="report"
+          class="page"
+          aria-live="polite"
+        >
+          <div class="loading">
+            กำลังโหลด Preview...
+          </div>
+        </main>
+      </div>
+    </section>
+  </main>
+
+  <noscript>
+    <div class="error">
+      หน้า Review นี้จำเป็นต้องเปิดใช้งาน JavaScript
+    </div>
+  </noscript>
+
+  ./js/report.js
+  ./js/review.js
+</body>
+</html>
