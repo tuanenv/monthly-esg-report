@@ -74,10 +74,10 @@ function createNewsCard(item) {
   return `
     <article class="card card-${signpost.toLowerCase()}">
       <div class="card-image-wrapper">
-        "
-          alt="ภาพประกอบข่าว ${escapeHtml(item.title)}"
-          loading="eager"
-          onerror="this.onerror=null; this.src='./assets/images/news-01.png';"
+        <img
+          class="card-image"
+          src="${escapeHtml(item.image)}"
+                  onerror="this.onerror=null; this.src='./assets/images/news-01.png';"
         >
 
         <span class="card-image-label">
