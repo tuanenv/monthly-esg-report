@@ -1,7 +1,7 @@
 "use strict";
 
 const DATA_URL = "./data/default-report.json";
-
+let currentData = null;
 /**
  * ป้องกันข้อความจาก JSON ถูกตีความเป็น HTML
  */
@@ -67,60 +67,39 @@ function createStatistics(statistics = {}) {
 /**
  * สร้างการ์ดข่าวแต่ละรายการ
  */
-function createNewsCard(item) {
+function createNewsCard(item, index) {
   const signpost = normalizeSignpost(item.signpost);
   const score = normalizeScore(item.score);
 
   return `
     <article class="card card-${signpost.toLowerCase()}">
       <div class="card-image-wrapper">
-        <img
-          class="card-image"
-          src="${escapeHtml(item.image)}"
-                  onerror="this.onerror=null; this.src='./assets/images/news-01.png';"
+        ${escapeHtml(item.image)}"
+          loading="eager"
         >
-
-        <span class="card-image-label">
-          AI-GENERATED VISUAL
-        </span>
+        <span class="card-image-label">AI-GENERATED VISUAL</span>
       </div>
 
       <div class="card-meta">
-        <span class="card-index">
-          ${escapeHtml(item.index)}
-        </span>
-
-        <span class="card-category">
-          ${escapeHtml(item.category)} (${signpost})
-        </span>
-
-        <time class="card-date">
-          ${escapeHtml(item.date)}
-        </time>
+        <span class="card-index">${escapeHtml(item.index)}</span>
+        <span class="card-category">${escapeHtml(item.category)} (${signpost})</span>
+        <time class="card-date">${escapeHtml(item.date)}</time>
       </div>
 
-      <h2>${escapeHtml(item.title)}</h2>
+      <h2 data-field="title" data-news-index="${index}">${escapeHtml(item.title)}</h2>
 
-      <p class="card-summary">
+      <p class="card-summary" data-field="summary" data-news-index="${index}">
         ${escapeHtml(item.summary)}
       </p>
 
       <div class="card-implication">
         <strong>นัยสำคัญต่อธุรกิจ</strong>
-
-        <p>
-          ${escapeHtml(item.implication)}
-        </p>
+        <p data-field="implication" data-news-index="${index}">${escapeHtml(item.implication)}</p>
       </div>
 
       <footer class="card-footer">
-        <span>
-          แหล่งข่าว: ${escapeHtml(item.source)}
-        </span>
-
-        <span class="card-score">
-          คะแนน ${score}/9
-        </span>
+        <span>แหล่งข่าว: ${escapeHtml(item.source)}</span>
+        <span class="card-score">คะแนน ${score}/9</span>
       </footer>
     </article>
   `;
@@ -168,13 +147,13 @@ function createWatchlist(watchlist = []) {
  */
 function renderReport(data) {
   const report = document.getElementById("report");
-
+  currentData = data;
   if (!report) {
     throw new Error("ไม่พบ element ที่มี id='report'");
   }
 
   const news = Array.isArray(data.news) ? data.news : [];
-  const cards = news.map(createNewsCard).join("");
+  const cards = news.map((item, index) => createNewsCard(item, index)).join("");
 
   document.title =
     `${data.title ?? "Monthly ESG Intelligence"} | ` +
@@ -189,7 +168,7 @@ function renderReport(data) {
         <span class="highlight">ESG Intelligence</span>
       </h1>
 
-      <p>${escapeHtml(data.subtitle)}</p>
+      <p data-field="subtitle">${escapeHtml(data.subtitle)}</p>
 
       <span class="period">
         ${escapeHtml(data.reportMonth)} • Hybrid Prototype
@@ -200,9 +179,7 @@ function renderReport(data) {
       <div class="executive-content">
         <h3>บทสรุปข่าวสำคัญประจำเดือน</h3>
 
-        <p>
-          ${escapeHtml(data.executiveSummary)}
-        </p>
+        <p data-field="executiveSummary">${escapeHtml(data.executiveSummary)}</p>
       </div>
 
       ${createStatistics(data.statistics)}
@@ -305,11 +282,18 @@ if (!window.SKIP_AUTO_LOAD) {
   document.addEventListener("DOMContentLoaded", loadReport);
 }
 
-/**
- * เปิดฟังก์ชันบางส่วนให้หน้าอื่น (เช่น review.html) เรียกใช้ได้
- * ไม่กระทบการทำงานของ index.html
- */
+function setFieldEditable(enable) {
+  document.querySelectorAll("[data-field]").forEach((field) => {
+    field.contentEditable = enable ? "true" : "false";
+    field.spellcheck = false;
+  });
+
+  document.body.classList.toggle("edit-mode-active", enable);
+}
+
 window.ReportRenderer = {
   renderReport,
-  escapeHtml
+  escapeHtml,
+  setFieldEditable,
+  getCurrentData: () => currentData
 };
