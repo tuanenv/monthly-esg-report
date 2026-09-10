@@ -2,6 +2,7 @@
 
 const DRAFT_URL = "./data/default-report.json";
 const DEBOUNCE_MS = 400;
+const HTML2CANVAS_SCALE = 2;
 
 const SIGNPOST_OPTIONS = [
   { value: "SP1", label: "SP1 · ราคาคาร์บอน" },
@@ -58,6 +59,13 @@ function todayIso() {
   return `${year}-${month}-${day}`;
 }
 
+function slugifyForFilename(value) {
+  return String(value ?? "report")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9-]/g, "");
+}
+
 function downloadJson(filename, dataObject) {
   const jsonText = JSON.stringify(dataObject, null, 2);
 
@@ -66,7 +74,6 @@ function downloadJson(filename, dataObject) {
   });
 
   const url = URL.createObjectURL(blob);
-
   const link = document.createElement("a");
 
   link.href = url;
@@ -79,7 +86,7 @@ function downloadJson(filename, dataObject) {
 }
 
 /* ---------------------------------------------------------
-   DOM element builders (ป้องกัน HTML injection ด้วย DOM API)
+   DOM element builders
 --------------------------------------------------------- */
 
 function createLabeledInput(config) {
@@ -165,7 +172,7 @@ function createLabeledSelect(config) {
 }
 
 /* ---------------------------------------------------------
-   Top-level report fields (reportMonth, subtitle, ฯลฯ)
+   Top-level report fields
 --------------------------------------------------------- */
 
 const TOP_LEVEL_FIELD_MAP = [
@@ -221,7 +228,7 @@ function bindTopLevelFields(form) {
 }
 
 /* ---------------------------------------------------------
-   News item editors
+   News item editors (ไม่มีส่วนแก้ไขรูปภาพ)
 --------------------------------------------------------- */
 
 function buildNewsItemEditor(item, index) {
@@ -282,23 +289,6 @@ function buildNewsItemEditor(item, index) {
     dataset: { field: "title" }
   });
   wrapper.appendChild(titleField.label);
-
-  const imageField = createLabeledInput({
-    label: "พาธรูปภาพ (เช่น ./assets/images/news-01.png)",
-    name: "image",
-    value: item.image,
-    dataset: { field: "image" }
-  });
-
-  const imagePreview = document.createElement("img");
-  imagePreview.className = "news-item-image-preview";
-  imagePreview.src = item.image || "";
-  imagePreview.alt = "ตัวอย่างรูปข่าว";
-  imagePreview.loading = "lazy";
-  imagePreview.dataset.role = "image-preview";
-
-  imageField.label.appendChild(imagePreview);
-  wrapper.appendChild(imageField.label);
 
   const summaryField = createLabeledTextarea({
     label: "สรุปข่าวแบบย่อ",
@@ -380,16 +370,6 @@ function handleNewsFieldEvent(event, container) {
 
   if (field === "signpost") {
     editor.dataset.signpost = String(value).toUpperCase();
-  }
-
-  if (field === "image") {
-    const preview = editor.querySelector(
-      '[data-role="image-preview"]'
-    );
-
-    if (preview) {
-      preview.src = value;
-    }
   }
 
   scheduleUpdatePreview();
@@ -511,8 +491,8 @@ function updatePreviewNow() {
         <div class="error">
           <strong>ไม่พบ window.ReportRenderer</strong>
           <p>
-            กรุณาเพิ่มโค้ดส่งออกฟังก์ชันท้ายไฟล์ js/report.js
-            ตามคำแนะนำ ก่อนใช้งานหน้า Review
+            กรุณาตรวจสอบว่า js/report.js มีการ export
+            window.ReportRenderer ไว้ท้ายไฟล์
           </p>
         </div>
       `;
@@ -540,7 +520,7 @@ function updatePreviewNow() {
 const scheduleUpdatePreview = debounce(updatePreviewNow, DEBOUNCE_MS);
 
 /* ---------------------------------------------------------
-   Approval validation and export
+   Validation
 --------------------------------------------------------- */
 
 function validateBeforeApprove(data, reviewedBy) {
@@ -588,7 +568,50 @@ function validateBeforeApprove(data, reviewedBy) {
   };
 }
 
-function handleDownloadApproved(form, statusPill) {
+/* ---------------------------------------------------------
+   Export: PNG (client-side, ใช้ html2canvas)
+--------------------------------------------------------- */
+
+async function exportPreviewAsPng(filenameBase) {
+  if (!window.html2canvas) {
+    window.alert(
+      "ไม่พบไลบรารี html2canvas กรุณาตรวจสอบว่า review.html " +
+        "โหลดสคริปต์ html2canvas ก่อน review.js"
+    );
+
+    return false;
+  }
+
+  const reportNode = document.getElementById("report");
+
+  if (!reportNode) {
+    window.alert("ไม่พบส่วน Preview ของรายงาน");
+    return false;
+  }
+
+  const canvas = await window.html2canvas(reportNode, {
+    backgroundColor: "#ffffff",
+    scale: HTML2CANVAS_SCALE,
+    useCORS: true,
+    logging: false
+  });
+
+  const link = document.createElement("a");
+  link.download = `${filenameBase}.png`;
+  link.href = canvas.toDataURL("image/png");
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  return true;
+}
+
+/* ---------------------------------------------------------
+   Save & Export (JSON + PNG พร้อมกัน)
+--------------------------------------------------------- */
+
+async function handleSaveAndExport(form, statusPill, saveButton) {
   const reviewedBy = form.elements.namedItem("reviewedBy").value;
   const approvalComment = form.elements.namedItem(
     "approvalComment"
@@ -598,27 +621,47 @@ function handleDownloadApproved(form, statusPill) {
 
   if (!validation.valid) {
     window.alert(
-      "กรุณาแก้ไขก่อนดาวน์โหลด:\n\n" +
+      "กรุณาแก้ไขก่อนบันทึก:\n\n" +
         validation.errors.map((item) => `• ${item}`).join("\n")
     );
 
     return;
   }
 
-  const approvedData = deepClone(currentData);
+  const originalLabel = saveButton.textContent;
+  saveButton.disabled = true;
+  saveButton.textContent = "กำลังสร้างไฟล์...";
 
-  approvedData.status = "approved";
-  approvedData.reviewedBy = reviewedBy;
-  approvedData.reviewedDate = todayIso();
-  approvedData.approvalComment = approvalComment;
+  try {
+    const approvedData = deepClone(currentData);
 
-  downloadJson("approved-report.json", approvedData);
+    approvedData.status = "approved";
+    approvedData.reviewedBy = reviewedBy;
+    approvedData.reviewedDate = todayIso();
+    approvedData.approvalComment = approvalComment;
 
-  statusPill.textContent = "APPROVED";
-  statusPill.classList.remove("status-draft");
-  statusPill.classList.add("status-approved");
+    const filenameBase =
+      `monthly-esg-report-${slugifyForFilename(currentData.reportMonth)}`;
 
-  updatePreviewNow();
+    downloadJson(`${filenameBase}.json`, approvedData);
+
+    updatePreviewNow();
+
+    // รอให้ preview render เสร็จก่อน capture
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    await exportPreviewAsPng(filenameBase);
+
+    statusPill.textContent = "APPROVED";
+    statusPill.classList.remove("status-draft");
+    statusPill.classList.add("status-approved");
+  } catch (error) {
+    console.error(error);
+    window.alert(`เกิดข้อผิดพลาดระหว่างสร้างไฟล์: ${error.message}`);
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = originalLabel;
+  }
 }
 
 /* ---------------------------------------------------------
@@ -709,8 +752,8 @@ function initReviewPage() {
     "btn-refresh-preview"
   );
 
-  const btnDownloadApproved = document.getElementById(
-    "btn-download-approved"
+  const btnSaveExport = document.getElementById(
+    "btn-save-export"
   );
 
   const btnAddWatchItem = document.getElementById(
@@ -749,8 +792,8 @@ function initReviewPage() {
     updatePreviewNow();
   });
 
-  btnDownloadApproved.addEventListener("click", () => {
-    handleDownloadApproved(form, statusPill);
+  btnSaveExport.addEventListener("click", () => {
+    handleSaveAndExport(form, statusPill, btnSaveExport);
   });
 
   if (btnAddWatchItem) {
