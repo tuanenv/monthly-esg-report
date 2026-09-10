@@ -1,0 +1,59 @@
+name: Render Monthly ESG Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      format:
+        description: "Output format"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - png
+          - pdf
+
+permissions:
+  contents: read
+
+jobs:
+  render-report:
+    name: Render report to PNG and PDF
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Create output directory
+        run: mkdir -p output
+
+      - name: Render report
+        run: npm run render:${{ inputs.format }}
+
+      - name: List generated output
+        run: |
+          echo "Generated files:"
+          find output -maxdepth 1 -type f -print
+
+      - name: Upload rendered report
+        uses: actions/upload-artifact@v4
+        with:
+          name: monthly-esg-report-${{ inputs.format }}
+          path: output/
+          if-no-files-found: error
+          retention-days: 30
