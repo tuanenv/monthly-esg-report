@@ -12,6 +12,14 @@ on:
           - all
           - png
           - pdf
+      allow_unapproved:
+        description: "Bypass approval check (testing only)"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 permissions:
   contents: read
@@ -43,6 +51,8 @@ jobs:
         run: mkdir -p output
 
       - name: Render report
+        env:
+          ALLOW_UNAPPROVED_RENDER: ${{ inputs.allow_unapproved }}
         run: npm run render:${{ inputs.format }}
 
       - name: List generated output
