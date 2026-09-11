@@ -225,6 +225,24 @@ async function ensureReportReady(page) {
     );
   }
 
+  const reportStatus = await page.evaluate(() => {
+    return window.ReportRenderer?.getCurrentData?.()?.status ?? null;
+  });
+
+  const allowUnapproved =
+    String(process.env.ALLOW_UNAPPROVED_RENDER || "").toLowerCase() ===
+    "true";
+
+  if (reportStatus !== "approved" && !allowUnapproved) {
+    throw new Error(
+      `Render blocked: report status is "${reportStatus ?? "unknown"}", ` +
+        `not "approved". Analyst must approve the report before rendering. ` +
+        `(Set ALLOW_UNAPPROVED_RENDER=true to bypass for testing.)`
+    );
+  }
+
+  console.log(`Report status check passed: ${reportStatus ?? "bypassed"}`);
+  
   console.log("Report, images, and fonts are ready.");
 }
 
