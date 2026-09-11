@@ -276,17 +276,6 @@ async function createPng(page) {
   }
 }
 
-  const report = page.locator("#report");
-
-  await report.screenshot({
-    path: outputPath,
-    type: "png",
-    animations: "disabled"
-  });
-
-  console.log(`PNG created: ${outputPath}`);
-}
-
 async function createPdf(page) {
   const outputPath = path.join(
     OUTPUT_DIR,
