@@ -20,9 +20,17 @@ on:
         options:
           - "false"
           - "true"
+      publish_output:
+        description: "Commit output files back to repo for GitHub Pages"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   render-report:
@@ -40,7 +48,7 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
-    
+
       - name: Install Node dependencies
         run: npm ci
 
@@ -53,6 +61,7 @@ jobs:
       - name: Render report
         env:
           ALLOW_UNAPPROVED_RENDER: ${{ inputs.allow_unapproved }}
+          PUBLISH_OUTPUT: ${{ inputs.publish_output }}
         run: npm run render:${{ inputs.format }}
 
       - name: List generated output
@@ -60,10 +69,19 @@ jobs:
           echo "Generated files:"
           find output -maxdepth 1 -type f -print
 
-      - name: Upload rendered report
+      - name: Upload rendered report as artifact
         uses: actions/upload-artifact@v4
         with:
           name: monthly-esg-report-${{ inputs.format }}
           path: output/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Commit output to repository
+        if: ${{ inputs.publish_output == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/
+          git diff --cached --quiet || git commit -m "Publish rendered report output [skip ci]"
+          git push
