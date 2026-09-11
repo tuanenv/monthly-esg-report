@@ -74,9 +74,7 @@ function createNewsCard(item, index) {
   return `
     <article class="card card-${signpost.toLowerCase()}">
       <div class="card-image-wrapper">
-        ${escapeHtml(item.image)}"
-          loading="eager"
-        >
+        <img class="card-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="eager">
         <span class="card-image-label">AI-GENERATED VISUAL</span>
       </div>
 
@@ -275,8 +273,6 @@ async function loadReport() {
     }
   }
 }
-
-document.addEventListener("DOMContentLoaded", loadReport);
 
 if (!window.SKIP_AUTO_LOAD) {
   document.addEventListener("DOMContentLoaded", loadReport);
