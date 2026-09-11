@@ -8,6 +8,9 @@ const path = require("path");
 const ROOT_DIR = path.resolve(__dirname, "..");
 const OUTPUT_DIR = path.join(ROOT_DIR, "output");
 
+const PUBLISH_OUTPUT =
+  String(process.env.PUBLISH_OUTPUT || "").toLowerCase() === "true";
+
 const HOST = "127.0.0.1";
 const PORT = 4173;
 const REPORT_URL = `http://${HOST}:${PORT}/index.html`;
@@ -251,6 +254,27 @@ async function createPng(page) {
     OUTPUT_DIR,
     "monthly-esg-report.png"
   );
+
+  const report = page.locator("#report");
+
+  await report.screenshot({
+    path: outputPath,
+    type: "png",
+    animations: "disabled"
+  });
+
+  console.log(`PNG created: ${outputPath}`);
+
+  if (PUBLISH_OUTPUT) {
+    const draftPreviewPath = path.join(
+      OUTPUT_DIR,
+      "draft-preview.png"
+    );
+
+    fs.copyFileSync(outputPath, draftPreviewPath);
+    console.log(`Draft preview copy created: ${draftPreviewPath}`);
+  }
+}
 
   const report = page.locator("#report");
 
