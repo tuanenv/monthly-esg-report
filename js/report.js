@@ -159,7 +159,6 @@ function createTrends(trends) {
       (t, i) => `
         <div class="trend-item">
           <div class="trend-header">
-            <div class="trend-number">${i + 1}</div>
             <div class="trend-icon">${escapeHtml(t.icon)}</div>
             <div class="trend-title-en">${escapeHtml(t.titleEn)}</div>
           </div>
@@ -208,10 +207,8 @@ function renderReport(data) {
         <span class="highlight">ESG Intelligence</span>
       </h1>
 
-      <p data-field="subtitle">${escapeHtml(data.subtitle)}</p>
-
       <span class="period">
-        ${escapeHtml(data.reportMonth)} • Hybrid Prototype
+        ข่าวสำคัญประจำเดือน ${escapeHtml(data.reportMonth)}
       </span>
     </header>
 
