@@ -530,15 +530,16 @@ body {
   color: #ffffff;
   padding: 14px 20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  gap: 12px;
+  text-align: left;
 }
 
 .trends-label .trends-icon {
   font-size: 28px;
-  margin-bottom: 4px;
+  flex-shrink: 0;
 }
 
 .trends-label .trends-title {
