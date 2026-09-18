@@ -227,10 +227,7 @@ function renderReport(data) {
     ${createTrends(data.trends)}
 
     <footer class="report-footer">
-      Hybrid Report:
-      ภาพประกอบจาก AI ไม่มีข้อความ •
-      เนื้อหาทั้งหมดแสดงด้วย HTML •
-      Font: PTT 45 Pride
+      Create by Sustain Foresight Team with AI Assistant
     </footer>
   `;
 }
