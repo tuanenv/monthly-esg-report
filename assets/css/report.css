@@ -161,14 +161,16 @@ body {
 /* Executive summary */
 
 .executive-summary {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 20px;
+  display: block;
   margin: 20px 0;
   padding: 21px 25px;
   border-left: 7px solid #20aa83;
   border-radius: 15px;
   background: var(--primary-light);
+}
+
+.executive-content {
+  width: 100%;
 }
 
 .executive-content h3 {
