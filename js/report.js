@@ -158,9 +158,11 @@ function createTrends(trends) {
     .map(
       (t, i) => `
         <div class="trend-item">
-          <div class="trend-number">${i + 1}</div>
-          <div class="trend-icon">${escapeHtml(t.icon)}</div>
-          <div class="trend-title-en">${escapeHtml(t.titleEn)}</div>
+          <div class="trend-header">
+            <div class="trend-number">${i + 1}</div>
+            <div class="trend-icon">${escapeHtml(t.icon)}</div>
+            <div class="trend-title-en">${escapeHtml(t.titleEn)}</div>
+          </div>
           <div class="trend-desc-th">${escapeHtml(t.descTh)}</div>
         </div>
       `
@@ -215,12 +217,11 @@ function renderReport(data) {
 
     <section class="executive-summary">
       <div class="executive-content">
-        <h3>บทสรุปข่าวสำคัญประจำเดือน</h3>
+        <h3>Hilight this month</h3>
 
         <p data-field="executiveSummary">${escapeHtml(data.executiveSummary)}</p>
       </div>
 
-      ${createStatistics(data.statistics)}
     </section>
 
     <section class="news-grid">
