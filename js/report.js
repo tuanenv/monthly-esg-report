@@ -141,6 +141,46 @@ function createWatchlist(watchlist = []) {
 }
 
 /**
+ * สร้างส่วน 5 เทรนด์ ESG ที่ต้องจับตา
+ */
+function createTrends(trends) {
+  const FIXED_TRENDS = [
+    { icon: "🌍", titleEn: "Climate Adaptation", descTh: "การปรับตัวต่อการเปลี่ยนแปลงสภาพภูมิอากาศเป็นเรื่องเร่งด่วน" },
+    { icon: "📋", titleEn: "Regulation & Compliance", descTh: "กฎระเบียบ ESG ยังเปลี่ยนเร็ว โดยเฉพาะในยุโรป" },
+    { icon: "💰", titleEn: "Climate Finance", descTh: "การเงินสีเขียวหนุนโครงสร้างพื้นฐานและนวัตกรรมสะอาด" },
+    { icon: "👥", titleEn: "Just Transition", descTh: "การเปลี่ยนผ่านที่เป็นธรรม เน้นคน ชุมชน และห่วงโซ่อุปทาน" },
+    { icon: "📊", titleEn: "ESG Data & Evidence", descTh: "ข้อมูลและหลักฐานจริงสำคัญกว่าการสื่อสารเชิงภาพลักษณ์" }
+  ];
+
+  const list = Array.isArray(trends) && trends.length > 0 ? trends : FIXED_TRENDS;
+
+  const items = list
+    .map(
+      (t, i) => `
+        <div class="trend-item">
+          <div class="trend-number">${i + 1}</div>
+          <div class="trend-icon">${escapeHtml(t.icon)}</div>
+          <div class="trend-title-en">${escapeHtml(t.titleEn)}</div>
+          <div class="trend-desc-th">${escapeHtml(t.descTh)}</div>
+        </div>
+      `
+    )
+    .join("");
+
+  return `
+    <div class="trends-section">
+      <div class="trends-label">
+        <div class="trends-icon">📈</div>
+        <div class="trends-title">${list.length} เทรนด์ ESG<br>ที่ต้องจับตาในเดือนนี้</div>
+      </div>
+      <div class="trends-grid">
+        ${items}
+      </div>
+    </div>
+  `;
+}
+
+/**
  * ประกอบหน้า Report ทั้งหมด
  */
 function renderReport(data) {
