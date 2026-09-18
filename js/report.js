@@ -156,10 +156,10 @@ function createTrends(trends) {
       (t, i) => `
         <div class="trend-item">
           <div class="trend-header">
-            <div class="trend-icon">${escapeHtml(t.icon)}</div>
-            <div class="trend-title-en">${escapeHtml(t.titleEn)}</div>
+            <div class="trend-icon" data-field="icon" data-trend-index="${i}">${escapeHtml(t.icon)}</div>
+            <div class="trend-title-en" data-field="titleEn" data-trend-index="${i}">${escapeHtml(t.titleEn)}</div>
           </div>
-          <div class="trend-desc-th">${escapeHtml(t.descTh)}</div>
+          <div class="trend-desc-th" data-field="descTh" data-trend-index="${i}">${escapeHtml(t.descTh)}</div>
         </div>
       `
     )
