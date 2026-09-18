@@ -75,7 +75,6 @@ function createNewsCard(item, index) {
     <article class="card card-${signpost.toLowerCase()}">
       <div class="card-image-wrapper">
         <img class="card-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="eager">
-        <span class="card-image-label">AI-GENERATED VISUAL</span>
       </div>
 
       <div class="card-meta">
