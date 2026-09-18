@@ -228,6 +228,8 @@ function renderReport(data) {
     </section>
 
     ${createWatchlist(data.watchlist)}
+    
+    ${createTrends(data.trends)}
 
     <footer class="report-footer">
       Hybrid Report:
