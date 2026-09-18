@@ -80,8 +80,7 @@ function createNewsCard(item, index) {
 
       <div class="card-meta">
         <span class="card-index">${escapeHtml(item.index)}</span>
-        <span class="card-category">${escapeHtml(item.category)} (${signpost})</span>
-        <time class="card-date">${escapeHtml(item.date)}</time>
+        <span class="card-category">${escapeHtml(item.category)}</span>
       </div>
 
       <h2 data-field="title" data-news-index="${index}">${escapeHtml(item.title)}</h2>
@@ -97,7 +96,6 @@ function createNewsCard(item, index) {
 
       <footer class="card-footer">
         <span>แหล่งข่าว: ${escapeHtml(item.source)}</span>
-        <span class="card-score">คะแนน ${score}/9</span>
       </footer>
     </article>
   `;
