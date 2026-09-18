@@ -71,6 +71,22 @@ function syncDomFieldsToData(data) {
     data.watchlist[index][field] = element.textContent.trim();
   });
 
+  document.querySelectorAll("[data-trend-index]").forEach((element) => {
+    const index = Number(element.dataset.trendIndex);
+    const field = element.dataset.field;
+
+    if (
+      Number.isNaN(index) ||
+      !field ||
+      !data.trends ||
+      !data.trends[index]
+    ) {
+      return;
+    }
+
+    data.trends[index][field] = element.textContent.trim();
+  });
+
   return data;
 }
 
