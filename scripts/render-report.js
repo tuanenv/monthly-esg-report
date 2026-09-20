@@ -245,7 +245,15 @@ async function ensureReportReady(page) {
   }
 
   console.log(`Report status check passed: ${reportStatus ?? "bypassed"}`);
-  
+
+  // ===== ใหม่: ใส่ watermark ถ้า render ตอนยังไม่ approved =====
+  if (reportStatus !== "approved") {
+    await page.evaluate(() => {
+      document.body.setAttribute("data-preview-mode", "true");
+    });
+    console.log("Preview watermark applied (status is not approved).");
+  }
+
   console.log("Report, images, and fonts are ready.");
 }
 
