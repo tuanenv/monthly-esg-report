@@ -605,3 +605,19 @@ body {
   .trends-grid { grid-template-columns: repeat(2, 1fr); }
   .trend-item { border-left: none; border-top: 1px solid #e5e5e5; }
 }
+
+/* ===== ใหม่: Watermark แสดงตอน render preview (status = pending_review) ===== */
+body[data-preview-mode="true"] #report::after {
+  content: "PREVIEW - PENDING APPROVAL";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 4rem;
+  font-weight: 700;
+  color: rgba(220, 38, 38, 0.15);
+  z-index: 9999;
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
