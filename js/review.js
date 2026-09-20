@@ -3,6 +3,10 @@
 const DRAFT_URL = "./data/default-report.json";
 const HTML2CANVAS_SCALE = 2;
 
+// ===== ใหม่: URL ของ Flow 2a (HTTP Trigger รับ JSON แล้วเขียนเข้า MonthlyReportControl) =====
+// TODO: แทนที่ด้วย HTTP POST URL จริงจาก Power Automate (Flow 2a - Submit Report to List)
+const FLOW2A_URL = "https://70e17b12a95ee69e8ba90c33b91031.87.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/00/workflows/5c14d22f0186473fa4a888a9ead0edad/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=D5RKJYWPuLIX7Lm_Tv0_4mhZxs7_CToRzCBszdEW9oU";
+
 function slugifyForFilename(value) {
   return String(value ?? "report")
     .trim()
@@ -174,9 +178,52 @@ async function loadAndRenderDraft() {
   }
 }
 
+// ===== ใหม่: สร้าง payload สำหรับส่งไป Flow 2a =====
+// บังคับ status = "pending_review" เสมอ (ไม่ใช่ "approved" แบบปุ่ม export เดิม)
+// เพราะขั้นตอนนี้คือ "ส่งให้ Manager พิจารณา" ไม่ใช่ "อนุมัติแล้ว"
+function buildSubmitPayload(data, reviewedBy) {
+  const payload = JSON.parse(JSON.stringify(data));
+
+  payload.status = "pending_review";
+  payload.submittedBy = reviewedBy.trim();
+  payload.reviewedBy = "";
+  payload.reviewedDate = "";
+  payload.approvalComment = "";
+
+  // คง statistics เดิมไว้ตามที่ Flow 1 คำนวณมาให้แล้ว (keyStories, signposts, signalsReviewed)
+  // ไม่ต้องคำนวณใหม่ฝั่ง client เพราะข้อมูลนี้มากับ draft อยู่แล้ว
+
+  return payload;
+}
+
+// ===== ใหม่: ยิง HTTP POST ไปยัง Flow 2a =====
+async function submitToFlow2a(payload) {
+  const response = await fetch(FLOW2A_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  let result = null;
+  try {
+    result = await response.json();
+  } catch (_err) {
+    // บาง response (เช่น 202 Accepted จาก Power Automate ตอน test)
+    // อาจไม่มี body กลับมาเป็น JSON เสมอ ปล่อยผ่านไม่ throw
+  }
+
+  if (!response.ok) {
+    const message = result?.message || `HTTP ${response.status}`;
+    throw new Error(message);
+  }
+
+  return result;
+}
+
 function initReviewPage() {
   const toggleButton = document.getElementById("btn-toggle-edit");
   const saveButton = document.getElementById("btn-save-export");
+  const submitButton = document.getElementById("btn-submit-approval"); // ใหม่
   const reviewedByInput = document.getElementById("input-reviewed-by");
   const commentInput = document.getElementById("input-approval-comment");
   const statusPill = document.getElementById("edit-status-pill");
@@ -192,6 +239,7 @@ function initReviewPage() {
     toggleButton.classList.toggle("btn-editing", editModeOn);
   });
 
+  // ===== ปุ่มเดิม: บันทึกและส่งออก (JSON + PNG) แบบ local — ไม่แก้ไขใดๆ =====
   saveButton.addEventListener("click", async () => {
     const reviewedBy = reviewedByInput.value;
     const approvalComment = commentInput.value;
@@ -245,6 +293,57 @@ function initReviewPage() {
       saveButton.textContent = originalLabel;
     }
   });
+
+  // ===== ใหม่: ปุ่มส่งขออนุมัติ → ยิงไป Flow 2a =====
+  if (submitButton) {
+    submitButton.addEventListener("click", async () => {
+      const reviewedBy = reviewedByInput.value;
+
+      let data = window.ReportRenderer.getCurrentData();
+
+      if (!data) {
+        window.alert("ยังไม่มีข้อมูลรายงาน");
+        return;
+      }
+
+      data = syncDomFieldsToData(data);
+
+      // ใช้ validation ชุดเดิม (เกณฑ์เดียวกับปุ่ม export)
+      const validation = validateBeforeSave(data, reviewedBy);
+
+      if (!validation.valid) {
+        window.alert(
+          "กรุณาแก้ไขก่อนส่งขออนุมัติ:\n\n" +
+            validation.errors.map((item) => `• ${item}`).join("\n")
+        );
+        return;
+      }
+
+      const originalLabel = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "กำลังส่ง...";
+
+      try {
+        const payload = buildSubmitPayload(data, reviewedBy);
+        const result = await submitToFlow2a(payload);
+
+        statusPill.textContent = "PENDING REVIEW";
+        statusPill.classList.remove("status-draft", "status-approved");
+        statusPill.classList.add("status-pending");
+
+        window.alert(
+          "ส่งขออนุมัติสำเร็จ! Manager จะได้รับแจ้งเตือนเพื่อพิจารณาต่อไป" +
+            (result?.message ? `\n\n${result.message}` : "")
+        );
+      } catch (error) {
+        console.error(error);
+        window.alert(`ส่งขออนุมัติไม่สำเร็จ: ${error.message}`);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalLabel;
+      }
+    });
+  }
 
   loadAndRenderDraft();
 }
