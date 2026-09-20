@@ -97,6 +97,15 @@ body {
   background: #fde68a;
 }
 
+.btn-approval {
+  background-color: #008577;
+  color: #ffffff;
+}
+.status-pending {
+  background-color: #f5a623;
+  color: #ffffff;
+}
+
 .toolbar-input {
   padding: 8px 10px;
   font-family: "PTT 45 Pride", sans-serif;
