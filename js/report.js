@@ -213,7 +213,7 @@ function renderReport(data) {
 
     <section class="executive-summary">
       <div class="executive-content">
-        <h3>Hilight this month</h3>
+        <h3>Highlight this month</h3>
 
         <p data-field="executiveSummary">${escapeHtml(data.executiveSummary)}</p>
       </div>
