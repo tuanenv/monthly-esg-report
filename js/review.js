@@ -228,6 +228,14 @@ function initReviewPage() {
   const commentInput = document.getElementById("input-approval-comment");
   const statusPill = document.getElementById("edit-status-pill");
 
+  // ===== ซ่อนปุ่ม "บันทึกและส่งออก (JSON + PNG)" ไว้ก่อน =====
+  // หมายเหตุ: ซ่อนด้วย CSS (display: none) เท่านั้น ไม่ได้ลบ element หรือ event listener ออก
+  // เพื่อให้สามารถเปิดกลับมาใช้งานได้ง่ายในภายหลัง เพียงลบ/comment บรรทัดด้านล่างนี้ทิ้ง
+  if (saveButton) {
+    saveButton.style.display = "none";
+  }
+
+  
   let editModeOn = false;
 
   toggleButton.addEventListener("click", () => {
