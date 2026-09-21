@@ -221,7 +221,7 @@ async function submitToFlow2a(payload) {
 }
 
 function initReviewPage() {
-//  document.body.classList.add("review-mode");
+  document.body.classList.add("review-mode");
   const toggleButton = document.getElementById("btn-toggle-edit");
   const saveButton = document.getElementById("btn-save-export");
   const submitButton = document.getElementById("btn-submit-approval"); // ใหม่
