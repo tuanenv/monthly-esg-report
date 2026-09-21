@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "basePath": "assets/images/library",
+  "categories": [
+    {
+      "signpost": "SP1",
+      "label": "ราคาคาร์บอน / Carbon Price",
+      "folder": "sp1-carbon-price",
+      "images": [
+        {
+          "id": "sp1-01",
+          "file": "sp1-01.jpg",
+          "thumb": "thumbs/sp1-carbon-price/sp1-01.jpg",
+          "alt": "Carbon trading floor with digital price charts"
+        },
+        {
+          "id": "sp1-02",
+          "file": "sp1-02.jpg",
+          "thumb": "thumbs/sp1-carbon-price/sp1-02.jpg",
+          "alt": "Carbon emissions certificate document"
+        },
+        {
+          "id": "sp1-03",
+          "file": "sp1-03.jpg",
+          "thumb": "thumbs/sp1-carbon-price/sp1-03.jpg",
+          "alt": "Industrial smokestacks with CO2 data overlay"
+        },
+        {
+          "id": "sp1-04",
+          "file": "sp1-04.jpg",
+          "thumb": "thumbs/sp1-carbon-price/sp1-04.jpg",
+          "alt": "Aerial view of shipping port and cargo containers"
+        }
+      ]
+    },
+    {
+      "signpost": "SP2",
+      "label": "Initiative / เทคโนโลยี / การลงทุน",
+      "folder": "sp2-initiative",
+      "images": [
+        {
+          "id": "sp2-01",
+          "file": "sp2-01.jpg",
+          "thumb": "thumbs/sp2-initiative/sp2-01.jpg",
+          "alt": "Carbon capture and storage (CCS) industrial facility"
+        },
+        {
+          "id": "sp2-02",
+          "file": "sp2-02.jpg",
+          "thumb": "thumbs/sp2-initiative/sp2-02.jpg",
+          "alt": "Green ammonia production plant at sunset"
+        },
+        {
+          "id": "sp2-03",
+          "file": "sp2-03.jpg",
+          "thumb": "thumbs/sp2-initiative/sp2-03.jpg",
+          "alt": "Aircraft refueling with sustainable aviation fuel"
+        },
+        {
+          "id": "sp2-04",
+          "file": "sp2-04.jpg",
+          "thumb": "thumbs/sp2-initiative/sp2-04.jpg",
+          "alt": "Solar panel farm and wind turbines"
+        }
+      ]
+    },
+    {
+      "signpost": "SP3",
+      "label": "กฎระเบียบ / Regulation",
+      "folder": "sp3-regulation",
+      "images": [
+        {
+          "id": "sp3-01",
+          "file": "sp3-01.jpg",
+          "thumb": "thumbs/sp3-regulation/sp3-01.jpg",
+          "alt": "Government parliament building"
+        },
+        {
+          "id": "sp3-02",
+          "file": "sp3-02.jpg",
+          "thumb": "thumbs/sp3-regulation/sp3-02.jpg",
+          "alt": "Judge's gavel on legal documents"
+        },
+        {
+          "id": "sp3-03",
+          "file": "sp3-03.jpg",
+          "thumb": "thumbs/sp3-regulation/sp3-03.jpg",
+          "alt": "European Union building with flags"
+        },
+        {
+          "id": "sp3-04",
+          "file": "sp3-04.jpg",
+          "thumb": "thumbs/sp3-regulation/sp3-04.jpg",
+          "alt": "Businessperson signing compliance documents"
+        }
+      ]
+    },
+    {
+      "signpost": "MULTI",
+      "label": "ภาพรวม / Cross-cutting",
+      "folder": "multi-general",
+      "images": [
+        {
+          "id": "multi-01",
+          "file": "multi-01.jpg",
+          "thumb": "thumbs/multi-general/multi-01.jpg",
+          "alt": "Globe on conference table with city skyline"
+        },
+        {
+          "id": "multi-02",
+          "file": "multi-02.jpg",
+          "thumb": "thumbs/multi-general/multi-02.jpg",
+          "alt": "Business team discussing ESG strategy"
+        },
+        {
+          "id": "multi-03",
+          "file": "multi-03.jpg",
+          "thumb": "thumbs/multi-general/multi-03.jpg",
+          "alt": "Industrial refinery skyline with green light trails"
+        },
+        {
+          "id": "multi-04",
+          "file": "multi-04.jpg",
+          "thumb": "thumbs/multi-general/multi-04.jpg",
+          "alt": "Hands holding a green sprout with refinery background"
+        }
+      ]
+    }
+  ]
+}
