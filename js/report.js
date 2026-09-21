@@ -74,7 +74,6 @@ function createNewsCard(item, index) {
   return `
     <article class="card card-${signpost.toLowerCase()}">
 
-      // ใหม่
       <div class="card-image-wrapper" data-news-index="${index}" style="position: relative;">
         <img class="card-image" data-news-index="${index}" src="${escapeHtml(item.image)}"on type="button" class="btn-change-image" data-news-index="${index}" style="display: none;" title="เปลี่ยนรูปภาพ">
           🖼️ เปลี่ยนรูป
